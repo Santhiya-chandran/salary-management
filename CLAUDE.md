@@ -16,11 +16,12 @@ Full requirements: `docs/requirements.md`. Treat it as the source of truth.
   - min / max / average salary by country
   - average salary by job title within a country
   - headcount by country and department
+  - cross-country salary comparison in approximate USD
   - (stretch) median
 - **Seed:** 10,000 deterministic employees (fixed random seed), inserted in batches with `insert_all`.
 
 ### Out of scope for v1 (do not build)
-Salary history/audit trail, currency conversion, roles/permissions, payroll/tax, Excel import/export, bulk edits.
+Salary history/audit trail, live or auto-updated exchange rates, editing exchange rates in the UI, roles/permissions, payroll/tax, Excel import/export, bulk edits.
 
 ## Tech stack
 - Backend: Ruby on Rails 8, PostgreSQL, RSpec, FactoryBot, RuboCop
@@ -34,7 +35,8 @@ Salary history/audit trail, currency conversion, roles/permissions, payroll/tax,
 - **Do not commit.** Propose a commit message after each step; the developer reviews and commits.
 - **Thin controllers.** Put business logic in models, service objects, or query objects (e.g. `SalaryInsights::ByCountry`).
 - **Aggregations run in SQL** (`GROUP BY`, indexes on country, department, job_title), never by loading records into Ruby.
-- **Salaries:** store as decimal (never float) with a currency code. Compare salaries only within a country.
+- **Salaries:** store as decimal (never float) in the country's local currency. Local currency is the source of truth.
+- **USD conversion:** derived only, never stored on employees. Use a fixed exchange-rate table in the app with a "rates as of" date; use it only for cross-country comparisons. Within-country insights stay in local currency.
 - **Tests:** fast, deterministic, readable. No network calls, no reliance on seed data, no random values without a fixed seed.
 - Follow Rails conventions; prefer clarity over cleverness.
 

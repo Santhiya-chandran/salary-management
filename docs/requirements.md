@@ -23,6 +23,7 @@ Questions the HR Manager can answer:
 - What are the minimum, maximum, and average salaries in a given country?
 - What is the average salary for a job title within a country?
 - How many employees are in each country and department?
+- How do salaries compare across countries? (Shown in approximate USD.)
 - *(Stretch)* What is the median salary for a country or job title?
 
 ### 4. Data
@@ -30,7 +31,11 @@ Questions the HR Manager can answer:
 - Seed script also creates one HR Manager login for demo use.
 
 ## Key Decisions
-- **Salaries are stored in local currency with a currency code.** Comparisons are made within a country, which avoids misleading cross-currency averages and exchange-rate assumptions.
+- **Currency: local currency as the source of truth, with a USD view for cross-country comparison.**
+  - Salaries are stored, edited and shown in each country's local currency (each country has one currency), because that is what employees are actually paid.
+  - Within-country insights use local currency, so they are exact.
+  - Cross-country comparisons show a derived, approximate USD value using a fixed exchange-rate table kept in the app, with a "rates as of" date shown in the UI. Fixed rates keep results deterministic and testable.
+  - USD values are never stored on the employee record.
 - **Aggregations run in the database** (SQL `GROUP BY` with indexes), not in application code, so insights stay fast at 10,000+ rows.
 - **Server-side pagination and filtering**, so the UI never loads all 10,000 records at once.
 
@@ -38,8 +43,9 @@ Questions the HR Manager can answer:
 
 | Left out | Reason |
 |---|---|
-| Salary change history / audit trail | Valuable, but v1 focuses on managing current salaries. Pending stakeholder confirmation. Natural next phase. |
-| Currency conversion / org-wide comparisons in one currency | Needs reliable exchange-rate data and a policy decision on which rates to use. |
+| Salary change history / audit trail | v1 manages current salaries only; editing a salary overwrites it. Keeps the MVP focused. Natural next phase. |
+| Live or automatically updated exchange rates | Needs an external rate provider and a policy on which rates to use. Fixed rates are enough for approximate comparison in v1. |
+| Editing exchange rates in the UI | Rates change rarely; updating them in code is acceptable for v1. |
 | Roles & permissions (admin vs read-only) | Single HR Manager persona. Required before wider rollout. |
 | Payroll, tax, payslips | A different problem from salary data management. |
 | Excel/CSV import & export | High value, since HR uses Excel today, but secondary to core management and insights. First item for v2. |
