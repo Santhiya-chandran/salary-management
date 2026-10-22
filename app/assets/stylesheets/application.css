@@ -35,15 +35,16 @@
 
 body {
   margin: 0;
+}
+
+/* Login page. Page-level styles are scoped here rather than on body, so they
+   don't override Mantine's global styles on the React page. */
+
+.auth-page {
   font-family: var(--font-sans);
   color: var(--color-text);
   background: var(--color-background);
   line-height: 1.5;
-}
-
-/* Login page */
-
-.auth-page {
   min-height: 100vh;
   display: flex;
   align-items: center;

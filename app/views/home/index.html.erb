@@ -1,3 +1,8 @@
-<p>Signed in as <%= Current.user.email_address %></p>
+<%# Vite tags live here, not in the layout, so the login page loads no JavaScript. %>
+<% content_for :head do %>
+  <%= vite_client_tag %>
+  <%= vite_react_refresh_tag %>
+  <%= vite_javascript_tag "application.tsx" %>
+<% end %>
 
-<%= button_to "Sign out", session_path, method: :delete %>
+<%= tag.div id: "root", data: { user_email: Current.user.email_address } %>

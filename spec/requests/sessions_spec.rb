@@ -21,6 +21,12 @@ RSpec.describe "Sessions", type: :request do
       assert_select "input#password[type=password]"
     end
 
+    it "does not load the React app" do
+      get new_session_path
+
+      assert_select "script[type=module]", count: 0
+    end
+
     it "does not offer a password reset" do
       get new_session_path
 
