@@ -78,9 +78,40 @@ jobs:
         with:
           bundler-cache: true
 
+      # Request specs that render the React page trigger a Vite build.
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
       - name: Prepare test database
         run: bin/rails db:test:prepare
 
       - name: Run specs
         run: bin/rspec
 
+  frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Run component tests
+        run: npm test
