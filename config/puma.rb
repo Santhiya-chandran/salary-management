@@ -5,10 +5,10 @@
 # Puma starts a configurable number of processes (workers) and each process
 # serves each request in a thread from an internal thread pool.
 #
-# You can control the number of workers using ENV["WEB_CONCURRENCY"]. You
-# should only set this value when you want to run 2 or more workers. The
-# default is already 1. You can set it to `auto` to automatically start a worker
-# for each available processor.
+# This app always runs in single mode (one process, no workers), overriding
+# Puma's default of reading the worker count from ENV["WEB_CONCURRENCY"], which
+# Render sets to 1. The in-memory cache and login rate limit rely on a single
+# process. See docs/decisions.md.
 #
 # The ideal number of threads per worker depends both on how much time the
 # application spends waiting for IO operations and on how much you wish to
@@ -25,6 +25,8 @@
 # Any libraries that use a connection pool or another resource pool should
 # be configured to provide at least as many connections as the number of
 # threads. This includes Active Record's `pool` parameter in `database.yml`.
+workers 0
+
 threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
 threads threads_count, threads_count
 
