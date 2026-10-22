@@ -75,21 +75,8 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
+# One database. On Render, DATABASE_URL supplies the host, credentials and
+# database name and takes precedence over these values.
 production:
-  primary: &primary_production
-    <<: *default
-    database: salary_management_production
-    username: salary_management
-    password: <%= ENV["SALARY_MANAGEMENT_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
-    database: salary_management_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: salary_management_production_queue
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *primary_production
-    database: salary_management_production_cable
-    migrations_paths: db/cable_migrate
+  <<: *default
+  database: salary_management_production
