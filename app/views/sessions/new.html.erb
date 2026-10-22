@@ -1,8 +1,25 @@
-<%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
-<%= tag.div(flash[:notice], style: "color:green") if flash[:notice] %>
+<% content_for :title, "Sign in · Salary Management" %>
 
-<%= form_with url: session_path do |form| %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %><br>
-  <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72 %><br>
-  <%= form.submit "Sign in" %>
-<% end %>
+<main class="auth-page">
+  <section class="auth-card" aria-labelledby="auth-title">
+    <h1 id="auth-title" class="auth-card__title">Salary Management</h1>
+    <p class="auth-card__subtitle">Sign in to continue</p>
+
+    <%= tag.div(flash[:alert], class: "auth-card__alert", role: "alert") if flash[:alert] %>
+    <%= tag.div(flash[:notice], class: "auth-card__notice", role: "status") if flash[:notice] %>
+
+    <%= form_with url: session_path, class: "auth-form" do |form| %>
+      <div class="auth-form__field">
+        <%= form.label :email_address, "Email address", class: "auth-form__label" %>
+        <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", value: params[:email_address], class: "auth-form__input" %>
+      </div>
+
+      <div class="auth-form__field">
+        <%= form.label :password, "Password", class: "auth-form__label" %>
+        <%= form.password_field :password, required: true, autocomplete: "current-password", maxlength: 72, class: "auth-form__input" %>
+      </div>
+
+      <%= form.submit "Sign in", class: "auth-form__submit" %>
+    <% end %>
+  </section>
+</main>

@@ -11,6 +11,16 @@ RSpec.describe "Sessions", type: :request do
       expect(response.body).to include("Sign in")
     end
 
+    it "has a heading and labelled email and password fields" do
+      get new_session_path
+
+      assert_select "h1", "Salary Management"
+      assert_select "label[for=email_address]", "Email address"
+      assert_select "label[for=password]", "Password"
+      assert_select "input#email_address[type=email]"
+      assert_select "input#password[type=password]"
+    end
+
     it "does not offer a password reset" do
       get new_session_path
 
@@ -39,6 +49,13 @@ RSpec.describe "Sessions", type: :request do
 
       expect(response).to redirect_to(new_session_path)
       expect(flash[:alert]).to eq("Try another email address or password.")
+    end
+
+    it "shows the error on the login page as an alert" do
+      sign_in(user, password: "wrong password!")
+      follow_redirect!
+
+      assert_select "[role=alert]", "Try another email address or password."
     end
 
     it "rejects an unknown email address" do
