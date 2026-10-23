@@ -4,13 +4,15 @@ module SalaryInsights
   class ByJobTitle
     Row = Data.define(:job_title, :headcount, :average_salary, :min_salary, :max_salary)
 
+    class UnsupportedCountry < ArgumentError; end
+
     def self.call(country:)
       new(country:).call
     end
 
     def initialize(country:)
       @country = Country.find(country.to_s.strip.upcase) or
-        raise ArgumentError, "Unsupported country: #{country}"
+        raise UnsupportedCountry, "Unsupported country: #{country}"
     end
 
     def call

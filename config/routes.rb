@@ -6,6 +6,13 @@ Rails.application.routes.draw do
       # A collection route, so Rails matches it before /employees/:id.
       get :filters, on: :collection, to: "employee_filters#show"
     end
+
+    scope :insights, controller: :insights, as: :insights do
+      get :by_country
+      get :by_job_title
+      get :headcount
+      get :usd_comparison
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -13,16 +13,9 @@ class EmployeeSerializer
       country: @employee.country,
       country_name: Country.find(@employee.country)&.name,
       currency: @employee.currency,
-      salary: self.class.money(@employee.salary),
+      salary: DecimalFormat.money(@employee.salary),
       employment_type: @employee.employment_type,
       hire_date: @employee.hire_date.iso8601
     }
-  end
-
-  # Formats a decimal as a string with exactly two decimal places, without
-  # passing through Float (which can't hold large salaries exactly).
-  def self.money(amount)
-    whole, fraction = amount.round(2).to_s("F").split(".")
-    "#{whole}.#{fraction.to_s.ljust(2, "0")}"
   end
 end
