@@ -2,14 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { render } from "./test/render";
+import { stubApi } from "./test/apiMock";
 import { App } from "./App";
 
 describe("App", () => {
   beforeEach(() => {
     document.head.innerHTML = '<meta name="csrf-token" content="token-from-rails">';
-    // Pages load data on mount; these tests only check the shell, so answer
-    // every request with an empty body.
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { status: 200 })));
+    // Pages load data on mount; these tests only check the shell.
+    stubApi();
   });
 
   afterEach(() => {
