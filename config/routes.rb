@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   resource :session, only: %i[ new create destroy ]
 
   namespace :api, defaults: { format: :json } do
-    resources :employees, only: :index
+    resources :employees, only: %i[ index show create update destroy ]
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
