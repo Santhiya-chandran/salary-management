@@ -46,4 +46,35 @@ RSpec.describe "Home", type: :request do
       end
     end
   end
+
+  # React Router handles these pages in the browser; Rails must serve the app
+  # for them too, so refreshing or bookmarking a page works.
+  describe "React app pages" do
+    paths = [ "/employees", "/employees/12/edit", "/insights", "/insights/by-job-title" ]
+
+    paths.each do |path|
+      it "serves the React app at #{path} when logged in" do
+        sign_in(create(:user))
+
+        get path
+
+        expect(response).to have_http_status(:ok)
+        assert_select "#root"
+      end
+
+      it "redirects #{path} to the login page when logged out" do
+        get path
+
+        expect(response).to redirect_to(new_session_path)
+      end
+    end
+
+    it "does not swallow unknown pages" do
+      sign_in(create(:user))
+
+      get "/no-such-page"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

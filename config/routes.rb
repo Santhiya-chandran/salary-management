@@ -25,4 +25,10 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   root "home#index"
+
+  # Pages handled by React Router in the browser. Rails serves the same app
+  # shell for them so a refresh or bookmark works. Listed explicitly rather
+  # than as a catch-all, so unknown URLs still 404.
+  get "employees(/*rest)", to: "home#index", as: :employees_page
+  get "insights(/*rest)", to: "home#index", as: :insights_page
 end

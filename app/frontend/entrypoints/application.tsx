@@ -3,6 +3,7 @@ import "@mantine/core/styles.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { MantineProvider } from "@mantine/core";
+import { BrowserRouter } from "react-router";
 import { App } from "../App";
 import { theme } from "../theme";
 
@@ -15,7 +16,9 @@ const userEmail = rootElement.dataset.userEmail ?? "";
 createRoot(rootElement).render(
   <StrictMode>
     <MantineProvider theme={theme}>
-      <App userEmail={userEmail} />
+      <BrowserRouter>
+        <App userEmail={userEmail} />
+      </BrowserRouter>
     </MantineProvider>
   </StrictMode>,
 );

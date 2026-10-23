@@ -1,38 +1,24 @@
-import { AppShell, Button, Group, Text, Title } from "@mantine/core";
-import { csrfToken } from "./lib/csrf";
+import { Navigate, Route, Routes } from "react-router";
+import { AppLayout } from "./layout/AppLayout";
+import { EmployeesPage } from "./pages/EmployeesPage";
+import { InsightsPage } from "./pages/InsightsPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
 
 type AppProps = {
   userEmail: string;
 };
 
+// Client-side routes. Rails serves this app for /, /employees/* and
+// /insights/* (config/routes.rb), so refreshing any of these pages works.
 export function App({ userEmail }: AppProps) {
   return (
-    <AppShell header={{ height: 60 }} padding="md">
-      <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
-          <Title order={1} size="h3">
-            Salary Management
-          </Title>
-
-          <Group gap="sm">
-            <Text size="sm" c="dimmed">
-              {userEmail}
-            </Text>
-            {/* A plain form so Rails handles sign-out exactly as it does for the login page. */}
-            <form method="post" action="/session">
-              <input type="hidden" name="_method" value="delete" />
-              <input type="hidden" name="authenticity_token" value={csrfToken()} />
-              <Button type="submit" variant="default" size="xs">
-                Sign out
-              </Button>
-            </form>
-          </Group>
-        </Group>
-      </AppShell.Header>
-
-      <AppShell.Main>
-        <Text>Employees and salary insights are coming soon.</Text>
-      </AppShell.Main>
-    </AppShell>
+    <Routes>
+      <Route element={<AppLayout userEmail={userEmail} />}>
+        <Route index element={<Navigate to="/employees" replace />} />
+        <Route path="employees" element={<EmployeesPage />} />
+        <Route path="insights" element={<InsightsPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
   );
 }
