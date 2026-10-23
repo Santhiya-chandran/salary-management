@@ -2,7 +2,10 @@ Rails.application.routes.draw do
   resource :session, only: %i[ new create destroy ]
 
   namespace :api, defaults: { format: :json } do
-    resources :employees, only: %i[ index show create update destroy ]
+    resources :employees, only: %i[ index show create update destroy ] do
+      # A collection route, so Rails matches it before /employees/:id.
+      get :filters, on: :collection, to: "employee_filters#show"
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
