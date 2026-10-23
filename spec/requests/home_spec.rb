@@ -8,6 +8,14 @@ RSpec.describe "Home", type: :request do
       expect(response).to redirect_to(new_session_path)
     end
 
+    # Only /api responds with 401 JSON; every other page redirects, whatever
+    # format the request asks for.
+    it "redirects to the login page even when JSON is requested" do
+      get root_path, headers: { "Accept" => "application/json" }
+
+      expect(response).to redirect_to(new_session_path)
+    end
+
     context "when logged in" do
       let(:user) { create(:user, email_address: "hr@acme.example") }
 

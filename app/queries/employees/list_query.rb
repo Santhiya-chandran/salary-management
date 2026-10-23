@@ -15,7 +15,8 @@ module Employees
     DEFAULT_SORT = "full_name"
     DIRECTIONS = %w[asc desc].freeze
 
-    FILTERS = %i[country department job_title].freeze
+    # The parameters callers (such as the API) may pass through.
+    PARAMS = %i[search country department job_title sort direction page per_page].freeze
 
     Result = Data.define(:records, :total_count, :page, :per_page) do
       def total_pages
