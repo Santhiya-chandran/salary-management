@@ -124,6 +124,30 @@ describe("EmployeesPage", () => {
     expect(screen.getByRole("columnheader", { name: /Hire date/ })).toHaveAttribute("aria-sort", "descending");
   });
 
+  // Found in user testing: with an arrow only on the sorted column, people
+  // didn't realise the other headers could be clicked.
+  it("shows a sort icon on every sortable header before anything is clicked", async () => {
+    stubApi({ list: () => ({ body: listResponse([employee()]) }) });
+    renderPage();
+    await screen.findByText("Ada Lovelace");
+
+    // No sort in the URL means name ascending, the API's default.
+    expect(screen.getByRole("columnheader", { name: "Name" })).toHaveTextContent("Name▲");
+    expect(screen.getByRole("columnheader", { name: "Salary" })).toHaveTextContent("Salary↕");
+    expect(screen.getByRole("columnheader", { name: "Hire date" })).toHaveTextContent("Hire date↕");
+    // Columns that can't be sorted get no icon.
+    expect(screen.getByRole("columnheader", { name: "Department" })).toHaveTextContent(/^Department$/);
+  });
+
+  it("keeps the icon out of the button's accessible name and explains it on hover", async () => {
+    stubApi({ list: () => ({ body: listResponse([employee()]) }) });
+    renderPage();
+    await screen.findByText("Ada Lovelace");
+
+    const button = screen.getByRole("button", { name: "Salary" });
+    expect(button).toHaveAttribute("title", "Sort by salary");
+  });
+
   it("explains that salaries are in local currencies when sorting by salary across countries", async () => {
     stubApi({ list: () => ({ body: listResponse([employee()]) }) });
     renderPage("/employees?sort=salary");

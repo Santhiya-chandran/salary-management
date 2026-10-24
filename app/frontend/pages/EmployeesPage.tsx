@@ -228,15 +228,24 @@ type SortableHeaderProps = {
   align?: "left" | "right";
 };
 
-// A column header that sorts the list; aria-sort tells screen readers the order.
+// A column header that sorts the list. Every sortable header always shows an
+// icon (user testing showed people didn't realise headers were clickable
+// otherwise): a faint ↕ when the list isn't sorted by this column, ▲ or ▼
+// when it is. The icon is decorative; aria-sort tells screen readers the order.
 function SortableHeader({ column, label, sort, direction, onSort, align = "left" }: SortableHeaderProps) {
   const active = column === sort;
   const ariaSort = active ? (direction === "asc" ? "ascending" : "descending") : "none";
+  const icon = active ? (direction === "asc" ? "▲" : "▼") : "↕";
 
   return (
     <Table.Th aria-sort={ariaSort} ta={align}>
-      <UnstyledButton onClick={() => onSort(column)} fw={700} fz="sm">
-        {label} {active ? (direction === "asc" ? "▲" : "▼") : ""}
+      <UnstyledButton onClick={() => onSort(column)} title={`Sort by ${label.toLowerCase()}`} fw={700} fz="sm">
+        <Group component="span" gap={6} wrap="nowrap" justify={align === "right" ? "flex-end" : "flex-start"}>
+          <span>{label}</span>
+          <Text component="span" aria-hidden fz="xs" c={active ? "blue" : "dimmed"}>
+            {icon}
+          </Text>
+        </Group>
       </UnstyledButton>
     </Table.Th>
   );

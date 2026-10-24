@@ -147,9 +147,11 @@ describe("InsightsPage", () => {
       expect(engineer.getByText("INR 2,000,000.00")).toBeInTheDocument();
       expect(engineer.getByText("INR 3,000,001.00")).toBeInTheDocument();
       expect(screen.getByRole("columnheader", { name: "Median" })).toBeInTheDocument();
-      // The chart is lazy-loaded, so it appears after the table.
+      // The chart is lazy-loaded, so it appears after the table. Its first load
+      // makes Vitest transform recharts, which can take over findBy's default
+      // 1s on a busy machine, so allow longer.
       expect(
-        await screen.findByRole("figure", { name: "Average salary by job title in India (INR)" }),
+        await screen.findByRole("figure", { name: "Average salary by job title in India (INR)" }, { timeout: 5000 }),
       ).toBeInTheDocument();
       expect(screen.getByTestId("location")).toHaveTextContent("/insights/by-job-title?country=IN");
       const request = recordedRequests(fetchMock).find((r) => r.url.pathname === "/api/insights/by_job_title")!;

@@ -421,3 +421,12 @@ Entries are numbered in the order they were made. When a decision replaces an ea
 
   The JavaScript every page loads shrank by 44% (42% gzipped). The build confirms recharts appears only in the chart file, and Vite's manifest lists the chart's JS and CSS. The main bundle is still just over Vite's 500 kB warning threshold, mostly Mantine's core components; splitting it further isn't worth the complexity for v1.
 - **Testing:** the insights test now waits for the chart (`findByRole("figure", …)`), because it appears after the table has loaded.
+
+## 36. Sort icons always visible on sortable headers
+
+Updates the sorting bullet of decision 31.
+
+- **Decision:** Name, Salary and Hire date always show a sort icon. A faint **↕** means "not sorted by this column, click to sort"; a blue **▲** or **▼** shows the current sort and its direction. Hovering a header shows "Sort by …". The icon is decorative (`aria-hidden`), so screen readers still hear just the column name, plus the order from `aria-sort`. Columns that can't be sorted have no icon.
+- **Why:** in user testing, people didn't realise the headers were clickable, because only the column already being sorted showed an arrow.
+- **Icons:** text arrows rather than an icon package such as `@tabler/icons-react`, to avoid a dependency for three symbols.
+- **Test fix found along the way:** the insights test waits up to 5 s for the lazy-loaded chart (decision 35). On a busy machine, Vitest can take longer than Testing Library's default 1 s to transform recharts the first time it's loaded, which made the test fail now and then.
