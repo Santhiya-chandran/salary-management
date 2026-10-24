@@ -147,7 +147,10 @@ describe("InsightsPage", () => {
       expect(engineer.getByText("INR 2,000,000.00")).toBeInTheDocument();
       expect(engineer.getByText("INR 3,000,001.00")).toBeInTheDocument();
       expect(screen.getByRole("columnheader", { name: "Median" })).toBeInTheDocument();
-      expect(screen.getByRole("figure", { name: "Average salary by job title in India (INR)" })).toBeInTheDocument();
+      // The chart is lazy-loaded, so it appears after the table.
+      expect(
+        await screen.findByRole("figure", { name: "Average salary by job title in India (INR)" }),
+      ).toBeInTheDocument();
       expect(screen.getByTestId("location")).toHaveTextContent("/insights/by-job-title?country=IN");
       const request = recordedRequests(fetchMock).find((r) => r.url.pathname === "/api/insights/by_job_title")!;
       expect(request.url.searchParams.get("country")).toBe("IN");

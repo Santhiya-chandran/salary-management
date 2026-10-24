@@ -1,6 +1,4 @@
 import "@mantine/core/styles.css";
-// Charts styles must come after the core styles (Mantine docs).
-import "@mantine/charts/styles.css";
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";

@@ -1,10 +1,14 @@
-import { Select, Stack, Table, Text } from "@mantine/core";
+import { lazy, Suspense } from "react";
+import { Loader, Select, Stack, Table, Text } from "@mantine/core";
 import { useSearchParams } from "react-router";
 import { formatCount, formatMoney } from "../../lib/format";
 import { useApiGet } from "../../lib/useApiGet";
 import type { FilterOptions, JobTitleInsights } from "../../types";
 import { InsightStatus } from "./InsightStatus";
-import { JobTitleChart } from "./JobTitleChart";
+
+// The chart pulls in recharts, which is larger than the rest of the app put
+// together, so it is downloaded only when this view first shows a chart.
+const JobTitleChart = lazy(() => import("./JobTitleChart").then((module) => ({ default: module.JobTitleChart })));
 
 // Average (and min, max) salary per job title within one country. The
 // country is kept in the URL (?country=IN).
@@ -39,7 +43,11 @@ export function ByJobTitleInsight() {
           empty={jobTitles.length === 0}
           emptyMessage="No employees in this country yet."
         >
-          {data && <JobTitleChart rows={jobTitles} countryName={data.country_name} currency={data.currency} />}
+          {data && (
+            <Suspense fallback={<Loader size="sm" aria-label="Loading chart" />}>
+              <JobTitleChart rows={jobTitles} countryName={data.country_name} currency={data.currency} />
+            </Suspense>
+          )}
           <Text size="sm" c="dimmed">
             In {data?.currency}, highest average first.
           </Text>

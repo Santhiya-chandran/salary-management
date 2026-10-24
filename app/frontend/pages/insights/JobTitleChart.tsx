@@ -1,3 +1,7 @@
+// Imported here rather than in the entry file so the charts CSS is split out
+// with this lazy-loaded chart. It still loads after the core styles, as
+// Mantine requires, because the core styles are in the main bundle.
+import "@mantine/charts/styles.css";
 import { BarChart } from "@mantine/charts";
 import { Text } from "@mantine/core";
 import type { JobTitleInsight } from "../../types";
