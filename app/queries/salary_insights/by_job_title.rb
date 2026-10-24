@@ -2,7 +2,7 @@ module SalaryInsights
   # Headcount and average, min and max salary per job title within one
   # country, in that country's currency. Uses the (country, job_title) index.
   class ByJobTitle
-    Row = Data.define(:job_title, :headcount, :average_salary, :min_salary, :max_salary)
+    Row = Data.define(:job_title, :headcount, :average_salary, :min_salary, :max_salary, :median_salary)
 
     class UnsupportedCountry < ArgumentError; end
 
@@ -21,7 +21,7 @@ module SalaryInsights
         .group(:job_title)
         .order(Arel.sql("AVG(salary) DESC, LOWER(job_title) ASC"))
         .pluck(:job_title, Arel.sql("COUNT(*)"), Arel.sql("AVG(salary)"),
-          Arel.sql("MIN(salary)"), Arel.sql("MAX(salary)"))
+          Arel.sql("MIN(salary)"), Arel.sql("MAX(salary)"), Sql::MEDIAN_SALARY)
         .map { |values| Row.new(*values) }
     end
   end

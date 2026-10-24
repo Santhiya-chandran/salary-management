@@ -31,6 +31,11 @@ RSpec.describe SalaryInsights::CrossCountryUsd do
     expect(row_for("GB").average_usd).to eq(BigDecimal("80255.91"))
   end
 
+  it "converts the median salary too" do
+    expect(row_for("GB").median_usd).to eq(BigDecimal("80255.46"))
+    expect(row_for("IN").median_usd).to eq(BigDecimal("15818.98"))
+  end
+
   it "includes the rate used for each country" do
     expect(row_for("IN").usd_rate.round(4)).to eq(BigDecimal("94.8228"))
   end

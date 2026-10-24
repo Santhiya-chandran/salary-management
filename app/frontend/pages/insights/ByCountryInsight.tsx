@@ -15,7 +15,7 @@ export function ByCountryInsight() {
         Salaries are shown in each country's own currency. Use the USD comparison to compare across countries.
       </Text>
       <InsightStatus loading={loading} error={error} empty={countries.length === 0}>
-        <Table.ScrollContainer minWidth={700}>
+        <Table.ScrollContainer minWidth={820}>
           <Table striped>
             <Table.Thead>
               <Table.Tr>
@@ -23,6 +23,7 @@ export function ByCountryInsight() {
                 <Table.Th ta="right">Employees</Table.Th>
                 <Table.Th ta="right">Minimum</Table.Th>
                 <Table.Th ta="right">Average</Table.Th>
+                <Table.Th ta="right">Median</Table.Th>
                 <Table.Th ta="right">Maximum</Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -33,6 +34,7 @@ export function ByCountryInsight() {
                   <Table.Td ta="right">{formatCount(row.headcount)}</Table.Td>
                   <Table.Td ta="right">{formatMoney(row.min_salary, row.currency)}</Table.Td>
                   <Table.Td ta="right">{formatMoney(row.average_salary, row.currency)}</Table.Td>
+                  <Table.Td ta="right">{formatMoney(row.median_salary, row.currency)}</Table.Td>
                   <Table.Td ta="right">{formatMoney(row.max_salary, row.currency)}</Table.Td>
                 </Table.Tr>
               ))}

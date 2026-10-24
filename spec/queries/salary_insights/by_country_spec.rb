@@ -27,6 +27,31 @@ RSpec.describe SalaryInsights::ByCountry do
     expect(gb.average_salary).to be < BigDecimal("60000.334")
   end
 
+  describe "median salary" do
+    it "is the middle salary for an odd number of employees" do
+      gb = described_class.call.find { |row| row.country == "GB" }
+
+      expect(gb.median_salary).to eq(BigDecimal("60000"))
+    end
+
+    it "is the exact average of the two middle salaries for an even number" do
+      india = described_class.call.find { |row| row.country == "IN" }
+
+      expect(india.median_salary).to eq(BigDecimal("1500000.5"))
+    end
+
+    it "stays an exact decimal where a float would round" do
+      create(:employee, country: "JP", currency: "JPY", salary: BigDecimal("9999999999999.98"))
+      create(:employee, country: "JP", currency: "JPY", salary: BigDecimal("9999999999999.99"))
+
+      japan = described_class.call.find { |row| row.country == "JP" }
+
+      # A float median would be 9999999999999.984.
+      expect(japan.median_salary).to eq(BigDecimal("9999999999999.985"))
+      expect(japan.median_salary).to be_a(BigDecimal)
+    end
+  end
+
   it "never mixes countries" do
     india = described_class.call.find { |row| row.country == "IN" }
 

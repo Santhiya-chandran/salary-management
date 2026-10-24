@@ -19,6 +19,15 @@ RSpec.describe SalaryInsights::ByJobTitle do
     expect(engineer.max_salary).to eq(BigDecimal("3000001"))
   end
 
+  it "includes the median salary per job title, exact and within the country" do
+    create(:employee, country: "IN", currency: "INR", job_title: "Engineer", salary: BigDecimal("2100000"))
+    engineer = described_class.call(country: "IN").find { |row| row.job_title == "Engineer" }
+
+    # India's engineers: 2,000,000 / 2,100,000 / 3,000,001; the US engineer is ignored.
+    expect(engineer.median_salary).to eq(BigDecimal("2100000"))
+    expect(engineer.median_salary).to be_a(BigDecimal)
+  end
+
   it "sorts by average salary, highest first, then by job title ignoring case" do
     titles = described_class.call(country: "IN").map(&:job_title)
 

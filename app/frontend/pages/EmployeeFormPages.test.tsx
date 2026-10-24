@@ -9,6 +9,8 @@ function writes(fetchMock: ReturnType<typeof stubApi>): RecordedRequest[] {
   return recordedRequests(fetchMock).filter((request) => request.method !== "GET");
 }
 
+// delay: null types without pausing between keystrokes, which keeps these
+// eight-field form tests fast.
 function field(label: string | RegExp) {
   return screen.getByLabelText(label, { selector: "input" });
 }
@@ -40,7 +42,7 @@ describe("employee form pages", () => {
 
   describe("adding an employee", () => {
     it("is reached from the list's Add employee button", async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ delay: null });
       stubApi();
       render(<App userEmail="hr@acme.example" />, { route: "/employees" });
 
@@ -68,7 +70,7 @@ describe("employee form pages", () => {
     });
 
     it("fills in the currency when a country is chosen", async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ delay: null });
       stubApi();
       render(<App userEmail="hr@acme.example" />, { route: "/employees/new" });
 
@@ -81,7 +83,7 @@ describe("employee form pages", () => {
     });
 
     it("suggests existing departments while still allowing a new one", async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ delay: null });
       stubApi();
       render(<App userEmail="hr@acme.example" />, { route: "/employees/new" });
 
@@ -95,7 +97,7 @@ describe("employee form pages", () => {
     });
 
     it("creates the employee and returns to the list with a confirmation", async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ delay: null });
       const fetchMock = stubApi({
         other: ({ method, url }) =>
           method === "POST" && url.pathname === "/api/employees"
@@ -127,7 +129,7 @@ describe("employee form pages", () => {
     });
 
     it("shows the API's validation errors next to the fields and stays on the form", async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ delay: null });
       stubApi({
         other: ({ method }) =>
           method === "POST"
@@ -163,7 +165,7 @@ describe("employee form pages", () => {
     }
 
     it("is reached from the Edit link in the list, and returns to the same filtered list", async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ delay: null });
       stubApi({
         list: () => ({ body: { employees: [employee()], meta: { page: 1, per_page: 25, total_count: 1, total_pages: 1 } } }),
         other: ({ method, url }) =>
@@ -190,7 +192,7 @@ describe("employee form pages", () => {
     });
 
     it("saves changes, including a new current salary", async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ delay: null });
       const fetchMock = stubEditApi();
       render(<App userEmail="hr@acme.example" />, { route: "/employees/1/edit" });
       await waitFor(() => expect(field(/^Salary/)).toHaveValue("85000.50"));
@@ -214,7 +216,7 @@ describe("employee form pages", () => {
     });
 
     it("asks for confirmation before deleting, and does nothing if cancelled", async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ delay: null });
       const fetchMock = stubEditApi();
       render(<App userEmail="hr@acme.example" />, { route: "/employees/1/edit" });
       await waitFor(() => expect(field("Full name")).toHaveValue("Ada Lovelace"));
@@ -230,7 +232,7 @@ describe("employee form pages", () => {
     });
 
     it("deletes after confirmation and returns to the list", async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ delay: null });
       const fetchMock = stubEditApi();
       render(<App userEmail="hr@acme.example" />, { route: "/employees/1/edit" });
       await waitFor(() => expect(field("Full name")).toHaveValue("Ada Lovelace"));

@@ -11,7 +11,8 @@ module SalaryInsightsSerializer
           headcount: row.headcount,
           min_salary: DecimalFormat.money(row.min_salary),
           max_salary: DecimalFormat.money(row.max_salary),
-          average_salary: DecimalFormat.money(row.average_salary)
+          average_salary: DecimalFormat.money(row.average_salary),
+          median_salary: DecimalFormat.money(row.median_salary)
         }
       end
     }
@@ -27,6 +28,7 @@ module SalaryInsightsSerializer
           job_title: row.job_title,
           headcount: row.headcount,
           average_salary: DecimalFormat.money(row.average_salary),
+          median_salary: DecimalFormat.money(row.median_salary),
           min_salary: DecimalFormat.money(row.min_salary),
           max_salary: DecimalFormat.money(row.max_salary)
         }
@@ -56,7 +58,8 @@ module SalaryInsightsSerializer
           headcount: row.headcount,
           min_usd: DecimalFormat.money(row.min_usd),
           max_usd: DecimalFormat.money(row.max_usd),
-          average_usd: DecimalFormat.money(row.average_usd)
+          average_usd: DecimalFormat.money(row.average_usd),
+          median_usd: DecimalFormat.money(row.median_usd)
         }
       end
     }

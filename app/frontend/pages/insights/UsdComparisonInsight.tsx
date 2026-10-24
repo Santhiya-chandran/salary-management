@@ -19,7 +19,7 @@ export function UsdComparisonInsight() {
         </Alert>
       )}
       <InsightStatus loading={loading} error={error} empty={countries.length === 0}>
-        <Table.ScrollContainer minWidth={760}>
+        <Table.ScrollContainer minWidth={880}>
           <Table striped>
             <Table.Thead>
               <Table.Tr>
@@ -28,6 +28,7 @@ export function UsdComparisonInsight() {
                 <Table.Th>Rate used</Table.Th>
                 <Table.Th ta="right">Minimum</Table.Th>
                 <Table.Th ta="right">Average</Table.Th>
+                <Table.Th ta="right">Median</Table.Th>
                 <Table.Th ta="right">Maximum</Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -41,6 +42,7 @@ export function UsdComparisonInsight() {
                   </Table.Td>
                   <Table.Td ta="right">{formatMoney(row.min_usd, "USD")}</Table.Td>
                   <Table.Td ta="right">{formatMoney(row.average_usd, "USD")}</Table.Td>
+                  <Table.Td ta="right">{formatMoney(row.median_usd, "USD")}</Table.Td>
                   <Table.Td ta="right">{formatMoney(row.max_usd, "USD")}</Table.Td>
                 </Table.Tr>
               ))}

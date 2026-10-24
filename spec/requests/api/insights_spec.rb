@@ -36,9 +36,11 @@ RSpec.describe "Salary insights API", type: :request do
         expect(response).to have_http_status(:ok)
         expect(json["countries"]).to eq([
           { "country" => "IN", "country_name" => "India", "currency" => "INR", "headcount" => 2,
-            "min_salary" => "1000000.00", "max_salary" => "2000001.00", "average_salary" => "1500000.50" },
+            "min_salary" => "1000000.00", "max_salary" => "2000001.00", "average_salary" => "1500000.50",
+            "median_salary" => "1500000.50" },
           { "country" => "GB", "country_name" => "United Kingdom", "currency" => "GBP", "headcount" => 3,
-            "min_salary" => "50000.00", "max_salary" => "70001.00", "average_salary" => "60000.33" }
+            "min_salary" => "50000.00", "max_salary" => "70001.00", "average_salary" => "60000.33",
+            "median_salary" => "60000.00" }
         ])
       end
     end
@@ -51,9 +53,9 @@ RSpec.describe "Salary insights API", type: :request do
         expect(json).to eq(
           "country" => "GB", "country_name" => "United Kingdom", "currency" => "GBP",
           "job_titles" => [
-            { "job_title" => "Recruiter", "headcount" => 1, "average_salary" => "70001.00",
+            { "job_title" => "Recruiter", "headcount" => 1, "average_salary" => "70001.00", "median_salary" => "70001.00",
               "min_salary" => "70001.00", "max_salary" => "70001.00" },
-            { "job_title" => "Engineer", "headcount" => 2, "average_salary" => "55000.00",
+            { "job_title" => "Engineer", "headcount" => 2, "average_salary" => "55000.00", "median_salary" => "55000.00",
               "min_salary" => "50000.00", "max_salary" => "60000.00" }
           ]
         )
@@ -103,9 +105,11 @@ RSpec.describe "Salary insights API", type: :request do
         expect(json["rates_source"]).to include("European Central Bank")
         expect(json["countries"]).to eq([
           { "country" => "GB", "country_name" => "United Kingdom", "currency" => "GBP", "usd_rate" => "0.7476",
-            "headcount" => 3, "min_usd" => "66879.55", "max_usd" => "93632.71", "average_usd" => "80255.91" },
+            "headcount" => 3, "min_usd" => "66879.55", "max_usd" => "93632.71", "average_usd" => "80255.91",
+            "median_usd" => "80255.46" },
           { "country" => "IN", "country_name" => "India", "currency" => "INR", "usd_rate" => "94.8228",
-            "headcount" => 2, "min_usd" => "10545.98", "max_usd" => "21091.97", "average_usd" => "15818.98" }
+            "headcount" => 2, "min_usd" => "10545.98", "max_usd" => "21091.97", "average_usd" => "15818.98",
+            "median_usd" => "15818.98" }
         ])
       end
     end

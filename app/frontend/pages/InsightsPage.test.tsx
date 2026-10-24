@@ -12,16 +12,19 @@ import { recordedRequests, stubApi } from "../test/apiMock";
 const byCountry = {
   countries: [
     { country: "IN", country_name: "India", currency: "INR", headcount: 2,
-      min_salary: "1000000.00", max_salary: "2000001.00", average_salary: "1500000.50" },
+      min_salary: "1000000.00", max_salary: "2000001.00", average_salary: "1500000.50", median_salary: "1500000.50" },
     { country: "GB", country_name: "United Kingdom", currency: "GBP", headcount: 3,
-      min_salary: "50000.00", max_salary: "70001.00", average_salary: "60000.33" },
+      min_salary: "50000.00", max_salary: "70001.00", average_salary: "60000.33", median_salary: "60000.00" },
   ],
 };
 
 const byJobTitle = {
   country: "IN", country_name: "India", currency: "INR",
   job_titles: [
-    { job_title: "Engineer", headcount: 2, average_salary: "2500000.50", min_salary: "2000000.00", max_salary: "3000001.00" },
+    { job_title: "Engineer", headcount: 2, average_salary: "2500000.50", median_salary: "2500000.50",
+      min_salary: "2000000.00", max_salary: "3000001.00" },
+    { job_title: "Recruiter", headcount: 1, average_salary: "900000.00", median_salary: "900000.00",
+      min_salary: "900000.00", max_salary: "900000.00" },
   ],
 };
 
@@ -38,9 +41,9 @@ const usdComparison = {
   rates_source: "European Central Bank euro foreign exchange reference rates",
   countries: [
     { country: "GB", country_name: "United Kingdom", currency: "GBP", usd_rate: "0.7476", headcount: 3,
-      min_usd: "66879.55", max_usd: "93632.71", average_usd: "80255.91" },
+      min_usd: "66879.55", max_usd: "93632.71", average_usd: "80255.91", median_usd: "80255.46" },
     { country: "IN", country_name: "India", currency: "INR", usd_rate: "94.8228", headcount: 2,
-      min_usd: "10545.98", max_usd: "21091.97", average_usd: "15818.98" },
+      min_usd: "10545.98", max_usd: "21091.97", average_usd: "15818.98", median_usd: "15818.98" },
   ],
 };
 
@@ -113,7 +116,10 @@ describe("InsightsPage", () => {
     expect(uk.getByText("GBP 50,000.00")).toBeInTheDocument();
     expect(uk.getByText("GBP 60,000.33")).toBeInTheDocument();
     expect(uk.getByText("GBP 70,001.00")).toBeInTheDocument();
-    expect(within(rowFor("India")).getByText("INR 1,500,000.50")).toBeInTheDocument();
+    expect(uk.getByText("GBP 60,000.00")).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Median" })).toBeInTheDocument();
+    // India's average and median are the same amount.
+    expect(within(rowFor("India")).getAllByText("INR 1,500,000.50")).toHaveLength(2);
     expect(screen.getByText(/each country's own currency/)).toBeInTheDocument();
   });
 
@@ -137,9 +143,11 @@ describe("InsightsPage", () => {
       await screen.findByRole("cell", { name: "Engineer" });
       const engineer = within(rowFor("Engineer"));
       expect(engineer.getByText("2")).toBeInTheDocument();
-      expect(engineer.getByText("INR 2,500,000.50")).toBeInTheDocument();
+      expect(engineer.getAllByText("INR 2,500,000.50")).toHaveLength(2); // average and median
       expect(engineer.getByText("INR 2,000,000.00")).toBeInTheDocument();
       expect(engineer.getByText("INR 3,000,001.00")).toBeInTheDocument();
+      expect(screen.getByRole("columnheader", { name: "Median" })).toBeInTheDocument();
+      expect(screen.getByRole("figure", { name: "Average salary by job title in India (INR)" })).toBeInTheDocument();
       expect(screen.getByTestId("location")).toHaveTextContent("/insights/by-job-title?country=IN");
       const request = recordedRequests(fetchMock).find((r) => r.url.pathname === "/api/insights/by_job_title")!;
       expect(request.url.searchParams.get("country")).toBe("IN");
@@ -177,6 +185,7 @@ describe("InsightsPage", () => {
     expect(uk.getByText("USD 80,255.91")).toBeInTheDocument();
     expect(uk.getByText("USD 66,879.55")).toBeInTheDocument();
     expect(uk.getByText("USD 93,632.71")).toBeInTheDocument();
+    expect(uk.getByText("USD 80,255.46")).toBeInTheDocument();
     const countries = screen.getAllByRole("row").slice(1).map((row) => within(row).getAllByRole("cell")[0].textContent);
     expect(countries).toEqual(["United Kingdom", "India"]);
   });

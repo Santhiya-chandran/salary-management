@@ -44,12 +44,14 @@ export type CountryInsight = {
   min_salary: string;
   max_salary: string;
   average_salary: string;
+  median_salary: string;
 };
 
 export type JobTitleInsight = {
   job_title: string;
   headcount: number;
   average_salary: string;
+  median_salary: string;
   min_salary: string;
   max_salary: string;
 };
@@ -77,6 +79,7 @@ export type UsdCountryInsight = {
   min_usd: string;
   max_usd: string;
   average_usd: string;
+  median_usd: string;
 };
 
 export type UsdComparison = {
