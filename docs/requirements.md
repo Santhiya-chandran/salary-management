@@ -15,20 +15,31 @@ ACME's HR team manages salary data for 10,000 employees across multiple countrie
 ### 2. Employee Management
 - Employee fields: full name, job title, department, country, salary, currency, employment type, hire date.
 - List view with **server-side pagination**, **search by name**, **filters** (country, department, job title), and **sorting** (name, salary, hire date).
-- Add, edit, and delete an employee, with validation (required fields, salary > 0, valid currency).
+- Add, edit, and delete an employee, with validation:
+  - every field is required;
+  - salary must be greater than 0;
+  - the currency must be the employee's country's currency (it's filled in automatically when the country is chosen);
+  - the hire date can't be in the future.
 - Edit updates the employee's **current** salary.
+- Department and job title suggest existing values while still allowing new ones, so the same department isn't entered under different spellings.
+- Deleting asks for confirmation.
 
 ### 3. Salary Insights
 Questions the HR Manager can answer:
 - What are the minimum, maximum, and average salaries in a given country?
 - What is the average salary for a job title within a country?
 - How many employees are in each country and department?
-- How do salaries compare across countries? (Shown in approximate USD.)
-- *(Stretch)* What is the median salary for a country or job title?
+- How do salaries compare across countries? (Shown in approximate USD, with the rate source and date.)
+- What is the median salary for a country or job title? *(Planned as a stretch goal; built in v1.)*
+
+The average salary by job title within a country is also shown as a bar chart. *(Planned as a stretch goal; built in v1.)*
 
 ### 4. Data
 - Seed script that creates 10,000 realistic, deterministic employees across multiple countries.
 - Seed script also creates one HR Manager login for demo use.
+- The seed only adds employees to an empty table, so it can run on every deploy without duplicating or changing data.
+- Supported countries, each with one currency: Australia (AUD), Canada (CAD), France (EUR), Germany (EUR), India (INR), Japan (JPY), United Kingdom (GBP), United States (USD).
+- USD conversion uses the European Central Bank's euro reference rates of 22 October 2026, kept in the app.
 
 ## Key Decisions
 - **Currency: local currency as the source of truth, with a USD view for cross-country comparison.**
@@ -50,6 +61,10 @@ Questions the HR Manager can answer:
 | Payroll, tax, payslips | A different problem from salary data management. |
 | Excel/CSV import & export | High value, since HR uses Excel today, but secondary to core management and insights. First item for v2. |
 | Bulk edits (e.g. a % raise for a group) | Useful for appraisal cycles. Deferred to keep v1 focused. |
+
+## Known Limitations (v1)
+
+See [Known limitations in the README](../README.md#known-limitations).
 
 ## Success Criteria
 - HR Manager can find any employee within a few seconds using search and filters.
