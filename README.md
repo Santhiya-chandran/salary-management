@@ -9,8 +9,8 @@ Salaries are kept in each country's own currency, which is what employees are ac
 ## Live demo
 
 - **App:** `https://salary-management-5wqi.onrender.com`
-- **Demo login:** `hr@acme.example` / `Incubyte#2026`
-- **Video walkthrough:** `<VIDEO LINK — to be added>`
+- **Demo login:** shared by email. To run locally, use `hr@acme.example` / `acme-demo-password` (see below).
+- **Video walkthrough:** [Watch on Google Drive](https://drive.google.com/file/d/1SM-dB-WaHHHzbCVHJ5Is3RMNOpX_fQ9A/view?usp=drive_link)
 
 The app runs on Render's free plan, which sleeps after 15 minutes without traffic, so the first request can take about a minute.
 
