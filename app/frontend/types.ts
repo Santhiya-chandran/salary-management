@@ -34,6 +34,57 @@ export type CountryOption = {
   currency: string;
 };
 
+// Salary insights (GET /api/insights/...). All money values are strings.
+
+export type CountryInsight = {
+  country: string;
+  country_name: string;
+  currency: string;
+  headcount: number;
+  min_salary: string;
+  max_salary: string;
+  average_salary: string;
+};
+
+export type JobTitleInsight = {
+  job_title: string;
+  headcount: number;
+  average_salary: string;
+  min_salary: string;
+  max_salary: string;
+};
+
+export type JobTitleInsights = {
+  country: string;
+  country_name: string;
+  currency: string;
+  job_titles: JobTitleInsight[];
+};
+
+export type HeadcountRow = {
+  country: string;
+  country_name: string;
+  department: string;
+  headcount: number;
+};
+
+export type UsdCountryInsight = {
+  country: string;
+  country_name: string;
+  currency: string;
+  usd_rate: string; // units of local currency per 1 USD
+  headcount: number;
+  min_usd: string;
+  max_usd: string;
+  average_usd: string;
+};
+
+export type UsdComparison = {
+  rates_as_of: string;
+  rates_source: string;
+  countries: UsdCountryInsight[];
+};
+
 export type FilterOptions = {
   countries: CountryOption[];
   departments: string[];

@@ -4,6 +4,10 @@ import { EditEmployeePage } from "./pages/EditEmployeePage";
 import { EmployeesPage } from "./pages/EmployeesPage";
 import { NewEmployeePage } from "./pages/NewEmployeePage";
 import { InsightsPage } from "./pages/InsightsPage";
+import { ByCountryInsight } from "./pages/insights/ByCountryInsight";
+import { ByJobTitleInsight } from "./pages/insights/ByJobTitleInsight";
+import { HeadcountInsight } from "./pages/insights/HeadcountInsight";
+import { UsdComparisonInsight } from "./pages/insights/UsdComparisonInsight";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 type AppProps = {
@@ -20,7 +24,13 @@ export function App({ userEmail }: AppProps) {
         <Route path="employees" element={<EmployeesPage />} />
         <Route path="employees/new" element={<NewEmployeePage />} />
         <Route path="employees/:id/edit" element={<EditEmployeePage />} />
-        <Route path="insights" element={<InsightsPage />} />
+        <Route path="insights" element={<InsightsPage />}>
+          <Route index element={<Navigate to="by-country" replace />} />
+          <Route path="by-country" element={<ByCountryInsight />} />
+          <Route path="by-job-title" element={<ByJobTitleInsight />} />
+          <Route path="headcount" element={<HeadcountInsight />} />
+          <Route path="usd-comparison" element={<UsdComparisonInsight />} />
+        </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
