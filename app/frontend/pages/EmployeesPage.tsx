@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import {
-  Alert, Box, Group, LoadingOverlay, Pagination, Select, Stack, Table, Text, TextInput, Title, UnstyledButton,
+  Alert, Anchor, Box, Button, Group, LoadingOverlay, Pagination, Select, Stack, Table, Text, TextInput, Title,
+  UnstyledButton, VisuallyHidden,
 } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
-import { useSearchParams } from "react-router";
+import { Link, useLocation, useSearchParams } from "react-router";
 import { employmentTypeLabel, formatCount, formatMoney } from "../lib/format";
 import { useApiGet } from "../lib/useApiGet";
 import type { EmployeeListResponse, FilterOptions } from "../types";
@@ -70,9 +71,27 @@ export function EmployeesPage() {
   const meta = list.data?.meta;
   const employees = list.data?.employees ?? [];
 
+  // "Ada Lovelace was added." etc., passed by the form pages after saving.
+  const location = useLocation();
+  const flash = (location.state as { flash?: string } | null)?.flash;
+  const [dismissedFlashKey, setDismissedFlashKey] = useState<string>();
+  // Lets the form pages return to this exact filtered list.
+  const fromList = { from: location.search };
+
   return (
     <Stack gap="md">
-      <Title order={2}>Employees</Title>
+      <Group justify="space-between">
+        <Title order={2}>Employees</Title>
+        <Button component={Link} to="/employees/new" state={fromList}>
+          Add employee
+        </Button>
+      </Group>
+
+      {flash && dismissedFlashKey !== location.key && (
+        <Alert color="green" withCloseButton onClose={() => setDismissedFlashKey(location.key)}>
+          {flash}
+        </Alert>
+      )}
 
       <Group align="flex-end" gap="sm">
         <TextInput
@@ -140,6 +159,9 @@ export function EmployeesPage() {
                 <SortableHeader column="salary" label="Salary" sort={sort} direction={direction} onSort={onSort} align="right" />
                 <Table.Th>Type</Table.Th>
                 <SortableHeader column="hire_date" label="Hire date" sort={sort} direction={direction} onSort={onSort} />
+                <Table.Th>
+                  <VisuallyHidden>Actions</VisuallyHidden>
+                </Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -154,6 +176,17 @@ export function EmployeesPage() {
                   </Table.Td>
                   <Table.Td>{employmentTypeLabel(employee.employment_type)}</Table.Td>
                   <Table.Td>{employee.hire_date}</Table.Td>
+                  <Table.Td>
+                    <Anchor
+                      component={Link}
+                      to={`/employees/${employee.id}/edit`}
+                      state={fromList}
+                      aria-label={`Edit ${employee.full_name}`}
+                      size="sm"
+                    >
+                      Edit
+                    </Anchor>
+                  </Table.Td>
                 </Table.Tr>
               ))}
             </Table.Tbody>
